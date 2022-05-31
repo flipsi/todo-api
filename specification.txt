@@ -1,0 +1,10 @@
+Your task is to design and implement a simple TODO API.
+
+A TODO has a name and description. Each TODO can have a list of TASKS associated with the TODO. Each TASK has only a name.
+
+The API should provide mechanisms to create, read, update and delete a TODO.
+
+Furthermore, it should provide machanisms to add and remove TASKS from the TODO as well as to update indiviual TASKS.
+
+How you store/persist the TODOS and TASKS is up to you.
+
