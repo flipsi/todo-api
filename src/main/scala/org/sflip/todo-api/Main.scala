@@ -2,7 +2,11 @@ package org.sflip.todo_api
 
 import org.sflip.todo_api.model._
 import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import wvlet.airframe.launcher._
+
+import scala.concurrent.ExecutionContext
 
 import Main.{TaskNumber, TodoId}
 
@@ -96,9 +100,21 @@ class TodoCommand(
 
 object Main extends App {
 
+  implicit val ec: ExecutionContext = ExecutionContext.global
+
   type TodoId     = Int
   type TaskNumber = Int
 
   Launcher.execute[TodoCommand](args)
+
+  val test = Database.getTodo(234).map { todo =>
+    todo match {
+      case Some(t) => println(s"So, jetzt hamma ${t.name} (${t.description}) with tasks ${t.tasks.mkString(",")}")
+      case None => println("No such TODO found")
+    }
+
+  }
+
+  Await.result(test , Duration.Inf)
 
 }
