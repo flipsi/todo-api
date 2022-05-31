@@ -9,18 +9,17 @@ import doobie.util.ExecutionContexts
 import doobie.util.{Read, Write}
 import org.sflip.todo_api.model._
 import org.sflip.todo_api.model.Types._
-import scala.concurrent.Future
 
 
 abstract class Database {
 
-  def getTodo(id: TodoId): Future[Option[Todo]]
-  def createTodo(todo: Todo): Future[TodoId]
-  def deleteTodo(id: TodoId): Future[Unit]
-  def updateTodo(id: TodoId, todo: Todo): Future[Unit]
-  def addTask(id: TodoId, name: String): Future[Unit]
-  def deleteTask(id: TodoId, number: Int): Future[Unit]
-  def updateTask(id: TodoId, number: Int, name: String): Future[Unit]
+  def getTodo(id: TodoId): Option[Todo]
+  def createTodo(todo: Todo): TodoId
+  def deleteTodo(id: TodoId): Unit
+  def updateTodo(id: TodoId, todo: Todo): Unit
+  def addTask(id: TodoId, name: String): Unit
+  def deleteTask(id: TodoId, number: Int): Unit
+  def updateTask(id: TodoId, number: Int, name: String): Unit
 
 }
 
@@ -47,13 +46,13 @@ object Postgresql extends Database {
   // }
   // import CustomMappings._
 
-  override def getTodo(id: TodoId): Future[Option[Todo]] = getTodoIO(id).transact(xa).unsafeToFuture
-  override def createTodo(todo: Todo): Future[TodoId] = createTodoIO(todo).transact(xa).unsafeToFuture
-  override def deleteTodo(id: TodoId): Future[Unit] = deleteTodoIO(id).transact(xa).unsafeToFuture
-  override def updateTodo(id: TodoId, todo: Todo): Future[Unit] = updateTodoIO(id, todo).transact(xa).unsafeToFuture
-  override def addTask(id: TodoId, name: String): Future[Unit] = addTaskIO(id, name).transact(xa).unsafeToFuture
-  override def deleteTask(id: TodoId, number: Int): Future[Unit] = deleteTaskIO(id, number).transact(xa).unsafeToFuture
-  override def updateTask(id: TodoId, number: Int, name: String): Future[Unit] = updateTaskIO(id, number, name).transact(xa).unsafeToFuture
+  override def getTodo(id: TodoId): Option[Todo] = getTodoIO(id).transact(xa).unsafeRunSync()
+  override def createTodo(todo: Todo): TodoId = createTodoIO(todo).transact(xa).unsafeRunSync()
+  override def deleteTodo(id: TodoId): Unit = deleteTodoIO(id).transact(xa).unsafeRunSync()
+  override def updateTodo(id: TodoId, todo: Todo): Unit = updateTodoIO(id, todo).transact(xa).unsafeRunSync()
+  override def addTask(id: TodoId, name: String): Unit = addTaskIO(id, name).transact(xa).unsafeRunSync()
+  override def deleteTask(id: TodoId, number: Int): Unit = deleteTaskIO(id, number).transact(xa).unsafeRunSync()
+  override def updateTask(id: TodoId, number: Int, name: String): Unit = updateTaskIO(id, number, name).transact(xa).unsafeRunSync()
 
   // def getTodoIO(id: TodoId): ConnectionIO[Option[Todo]] =
   // sql"""
