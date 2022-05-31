@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS todos;
 
 CREATE TABLE todos (
-    id              integer PRIMARY KEY,
+    id              SERIAL PRIMARY KEY,
     name            text,
     description     text
 );
