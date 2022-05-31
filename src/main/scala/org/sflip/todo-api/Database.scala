@@ -12,7 +12,20 @@ import scala.concurrent.Future
 
 import Main.{TaskNumber, TodoId}
 
-object Database {
+
+abstract class Database {
+
+  def getTodo(id: TodoId): Future[Option[Todo]]
+  def createTodo(todo: Todo): Future[TodoId]
+  def deleteTodo(id: TodoId): Future[Unit]
+  def updateTodo(id: TodoId, todo: Todo): Future[Unit]
+  def addTask(id: TodoId, name: String): Future[Unit]
+  def deleteTask(id: TodoId, number: Int): Future[Unit]
+  def updateTask(id: TodoId, number: Int, name: String): Future[Unit]
+
+}
+
+class Postgresql extends Database {
 
   object ConnectionParameters {
     val Database = "todo-api"
@@ -35,13 +48,13 @@ object Database {
   // }
   // import CustomMappings._
 
-  def getTodo(id: TodoId): Future[Option[Todo]] = getTodoIO(id).transact(xa).unsafeToFuture
-  def createTodo(todo: Todo): Future[TodoId] = createTodoIO(todo).transact(xa).unsafeToFuture
-  def deleteTodo(id: TodoId): Future[Unit] = deleteTodoIO(id).transact(xa).unsafeToFuture
-  def updateTodo(id: TodoId, todo: Todo): Future[Unit] = updateTodoIO(id, todo).transact(xa).unsafeToFuture
-  def addTask(id: TodoId, name: String): Future[Unit] = addTaskIO(id, name).transact(xa).unsafeToFuture
-  def deleteTask(id: TodoId, number: Int): Future[Unit] = deleteTaskIO(id, number).transact(xa).unsafeToFuture
-  def updateTask(id: TodoId, number: Int, name: String): Future[Unit] = updateTaskIO(id, number, name).transact(xa).unsafeToFuture
+  override def getTodo(id: TodoId): Future[Option[Todo]] = getTodoIO(id).transact(xa).unsafeToFuture
+  override def createTodo(todo: Todo): Future[TodoId] = createTodoIO(todo).transact(xa).unsafeToFuture
+  override def deleteTodo(id: TodoId): Future[Unit] = deleteTodoIO(id).transact(xa).unsafeToFuture
+  override def updateTodo(id: TodoId, todo: Todo): Future[Unit] = updateTodoIO(id, todo).transact(xa).unsafeToFuture
+  override def addTask(id: TodoId, name: String): Future[Unit] = addTaskIO(id, name).transact(xa).unsafeToFuture
+  override def deleteTask(id: TodoId, number: Int): Future[Unit] = deleteTaskIO(id, number).transact(xa).unsafeToFuture
+  override def updateTask(id: TodoId, number: Int, name: String): Future[Unit] = updateTaskIO(id, number, name).transact(xa).unsafeToFuture
 
   // def getTodoIO(id: TodoId): ConnectionIO[Option[Todo]] =
   // sql"""
