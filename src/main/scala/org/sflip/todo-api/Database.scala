@@ -8,9 +8,8 @@ import doobie.implicits.javasql._
 import doobie.util.ExecutionContexts
 import doobie.util.{Read, Write}
 import org.sflip.todo_api.model._
+import org.sflip.todo_api.model.Types._
 import scala.concurrent.Future
-
-import Main.{TaskNumber, TodoId}
 
 
 abstract class Database {
@@ -25,7 +24,7 @@ abstract class Database {
 
 }
 
-class Postgresql extends Database {
+object Postgresql extends Database {
 
   object ConnectionParameters {
     val Database = "todo-api"
