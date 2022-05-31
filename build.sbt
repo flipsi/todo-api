@@ -10,6 +10,9 @@ lazy val root = (project in file("."))
     name := "todo-api",
     libraryDependencies ++= Seq(
       airframe,
+      doobieCore,
+      doobiePostgres,
+      doobieSpecs,
       scalaTest % Test
     )
   )
