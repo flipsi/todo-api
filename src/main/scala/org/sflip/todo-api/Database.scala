@@ -70,7 +70,7 @@ object Postgresql extends Database {
     } yield todo.map { case (name, description) => Todo(name, description, tasks.map(Task(_))) }
 
   def createTodoIO(todo: Todo): ConnectionIO[TodoId] =
-    sql"INSERT INTO todos (name, description) VALUES (${todo.name}, ${todo.description}".update
+    sql"INSERT INTO todos (name, description) VALUES (${todo.name}, ${todo.description})".update
       .withUniqueGeneratedKeys("id")
 
   def deleteTodoIO(id: TodoId): ConnectionIO[Unit] =
