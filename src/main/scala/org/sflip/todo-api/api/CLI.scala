@@ -8,7 +8,6 @@ import wvlet.airframe.launcher._
 
 import scala.concurrent.ExecutionContext
 
-
 // class CLI(db: Database) {
 
 // Runtime error:
@@ -61,42 +60,63 @@ object CLI {
       }
     }
 
+    def printTodo(id: TodoId, todo: Todo): Unit = {
+      val todoString  = s"$id\t${todo.name.getOrElse("[no name]")}\t(${todo.description.getOrElse("no description")})"
+      val tasksString = s"Tasks: ${todo.tasks.map(_.name).mkString(", ")}"
+      println(s"$todoString:\t$tasksString")
+    }
+
     @command(description = "List all TODOs")
     def list() = println("Sorry, not implemented yet.")
 
     @command(description = "Create a TODO")
     def create() = {
-      println(s"Creating TODO $name.")
-      val generatedId = 42
+      val todo        = Todo(name, description, List.empty)
+      val generatedId = db.createTodo(todo)
       println(s"Created TODO $generatedId.")
     }
 
     @command(description = "Show a TODO")
     def show() = requireId { id =>
-      println(s"I will try to show TODO $id, I swear!")
+      db.getTodo(id) match {
+        case Some(t) => printTodo(id, t)
+        case _       => println(s"No TODO with ID $id found.")
+      }
     }
 
     @command(description = "Update a TODO")
     def update() = requireId { id =>
-      println(s"I will try to update TODO $id, I swear!")
+      db.getTodo(id) match {
+        case Some(t) => db.updateTodo(id, Todo(name, description, List.empty))
+        case _       => println(s"No TODO with ID $id found.")
+      }
     }
 
     @command(description = "Delete a TODO")
     def delete() = requireId { id =>
-      println(s"I will try to delete TODO $id, I swear!")
+      db.getTodo(id) match {
+        case Some(t) => db.deleteTodo(id)
+        case _       => println(s"No TODO with ID $id found.")
+      }
     }
 
     @command(description = "Add a TASK to a TODO")
     def addTask() = requireId { id =>
       requireName { name =>
-        println(s"I will try add TASK $name to TODO $id, I swear!")
+        db.getTodo(id) match {
+          case Some(t) => db.addTask(id, name)
+          case _       => println(s"No TODO with ID $id found.")
+        }
       }
     }
 
     @command(description = "Remove a TASK from a TODO")
     def removeTask() = requireId { id =>
       requireTaskNumber { taskNumber =>
-        println(s"I will try remove TASK $taskNumber from TODO $id, I swear!")
+        db.getTodo(id) match {
+          case Some(t) => db.deleteTask(id, taskNumber)
+          case _       => println(s"No TODO with ID $id found.")
+        }
       }
     }
 
@@ -104,7 +124,10 @@ object CLI {
     def updateTask() = requireId { id =>
       requireTaskNumber { taskNumber =>
         requireName { name =>
-          println(s"I will try update TASK $taskNumber from TODO $id, I swear!")
+          db.getTodo(id) match {
+            case Some(t) => db.updateTask(id, taskNumber, name)
+            case _       => println(s"No TODO with ID $id found.")
+          }
         }
       }
     }
