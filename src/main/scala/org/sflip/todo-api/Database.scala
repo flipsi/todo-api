@@ -65,7 +65,7 @@ object Postgresql extends Database {
 
   def getTodoIO(id: TodoId): ConnectionIO[Option[Todo]] =
     for {
-      todo  <- sql" SELECT name, description FROM todos WHERE id = $id".query[(String, String)].option
+      todo  <- sql" SELECT name, description FROM todos WHERE id = $id".query[(Option[String], Option[String])].option
       tasks <- sql"SELECT name FROM tasks WHERE todo_id = $id".query[String].to[List]
     } yield todo.map { case (name, description) => Todo(name, description, tasks.map(Task(_))) }
 
