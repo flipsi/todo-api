@@ -9,5 +9,5 @@ CREATE TABLE todos (
 
 CREATE TABLE tasks (
     todo_id         integer REFERENCES todos (id) ON DELETE CASCADE,
-    name            text
+    name            text NOT NULL
 );
