@@ -12,7 +12,8 @@ object Main extends App {
   implicit val ec: ExecutionContext = ExecutionContext.global
 
   val db: Database = Postgresql
-  val cli: CLI = new CLI(db)
+  // val cli: CLI = new CLI(db)
+  val cli = CLI
 
   cli.run(args)
 
