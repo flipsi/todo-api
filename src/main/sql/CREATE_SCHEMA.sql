@@ -9,5 +9,7 @@ CREATE TABLE todos (
 
 CREATE TABLE tasks (
     todo_id         integer REFERENCES todos (id) ON DELETE CASCADE,
-    name            text NOT NULL
+    task_id         SERIAL,
+    name            text NOT NULL,
+    UNIQUE(todo_id, task_id)
 );

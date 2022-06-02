@@ -10,7 +10,6 @@ import doobie.util.{Read, Write}
 import org.sflip.todo_api.model._
 import org.sflip.todo_api.model.Types._
 
-
 abstract class Database {
 
   def getTodo(id: TodoId): Option[Todo]
@@ -82,10 +81,18 @@ object Postgresql extends Database {
   def addTaskIO(id: TodoId, name: String): ConnectionIO[Unit] =
     sql"INSERT INTO tasks (todo_id, name) VALUES ($id, $name)".update.run.map(_ => ())
 
-  // TODO: Solve problem of specifying tasks with number, as SQL tables are (unordered) sets!
+  def deleteTaskIO(id: TodoId, number: Int): ConnectionIO[Unit] =
+    sql"""
+  DELETE FROM tasks
+  WHERE todo_id = $id AND task_id =
+    (SELECT task_id FROM tasks WHERE todo_id = 234 ORDER BY task_id LIMIT 1 OFFSET ${number - 1})
+    """.update.run.map(_ => ())
 
-  def deleteTaskIO(id: TodoId, number: Int): ConnectionIO[Unit] = ???
-
-  def updateTaskIO(id: TodoId, number: Int, name: String): ConnectionIO[Unit] = ???
+  def updateTaskIO(id: TodoId, number: Int, name: String): ConnectionIO[Unit] =
+    sql"""
+  UPDATE tasks SET name = ${name}
+  WHERE todo_id = $id AND task_id =
+    (SELECT task_id FROM tasks WHERE todo_id = 234 ORDER BY task_id LIMIT 1 OFFSET ${number - 1})
+    """.update.run.map(_ => ())
 
 }
