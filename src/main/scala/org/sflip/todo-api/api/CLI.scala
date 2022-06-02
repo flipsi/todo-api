@@ -3,10 +3,8 @@ package org.sflip.todo_api.api
 import org.sflip.todo_api.model._
 import org.sflip.todo_api.model.Types._
 import org.sflip.todo_api.{Database, Postgresql}
-import scala.concurrent.Future
 import wvlet.airframe.launcher._
 
-import scala.concurrent.ExecutionContext
 
 // class CLI(db: Database) {
 
