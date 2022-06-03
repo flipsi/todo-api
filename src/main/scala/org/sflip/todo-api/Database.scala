@@ -85,14 +85,14 @@ object Postgresql extends Database {
     sql"""
   DELETE FROM tasks
   WHERE todo_id = $id AND task_id =
-    (SELECT task_id FROM tasks WHERE todo_id = 234 ORDER BY task_id LIMIT 1 OFFSET ${number - 1})
+    (SELECT task_id FROM tasks WHERE todo_id = $id ORDER BY task_id LIMIT 1 OFFSET ${number - 1})
     """.update.run.map(_ => ())
 
   def updateTaskIO(id: TodoId, number: Int, name: String): ConnectionIO[Unit] =
     sql"""
   UPDATE tasks SET name = ${name}
   WHERE todo_id = $id AND task_id =
-    (SELECT task_id FROM tasks WHERE todo_id = 234 ORDER BY task_id LIMIT 1 OFFSET ${number - 1})
+    (SELECT task_id FROM tasks WHERE todo_id = $id ORDER BY task_id LIMIT 1 OFFSET ${number - 1})
     """.update.run.map(_ => ())
 
 }
